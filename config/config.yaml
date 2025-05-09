@@ -1,0 +1,13 @@
+artifacts_root: artifacts
+
+data_ingestion:
+  root_dir: artifacts/data_ingestion
+  raw_data_dir: artifacts/data_ingestion/raw_data
+  customers_csv: artifacts/data_ingestion/raw_data/customers.csv
+  products_csv: artifacts/data_ingestion/raw_data/products.csv
+  source_urls:
+    bank_customers: https://github.com/richardmukechiwa/Datasets/raw/refs/heads/main/bank_customers.zip
+    product_catalog: https://github.com/richardmukechiwa/Datasets/raw/refs/heads/main/product_catalog.zip
+  local_data_file: artifacts/data_ingestion/raw_data.zip
+  unzip_dir: artifacts/data_ingestion/raw_data
+

@@ -1,12 +1,11 @@
 import os
-import sys
 from pathlib import Path
 from typing import Any
-from box.exceptions import BoxValueError
 import yaml
 import joblib
 from ensure import ensure_annotations
 from box import ConfigBox
+from box.exceptions import BoxError
 from BankProducts import logger
 
 
@@ -29,7 +28,7 @@ def read_yaml(path_to_yaml: Path) -> ConfigBox:
             content = yaml.safe_load(yaml_file)
             logger.info(f"yaml file: {path_to_yaml} loaded successfully")
             return ConfigBox(content)
-    except BoxValueError:
+    except BoxError:
         raise ValueError("yaml file is empty")
     except Exception as e:
         raise e

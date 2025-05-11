@@ -3,13 +3,14 @@ artifacts_root: artifacts
 data_ingestion:
   root_dir: artifacts/data_ingestion
   raw_data_dir: artifacts/data_ingestion/raw_data
-  customers_csv: artifacts/data_ingestion/raw_data/bank_customers.csv
-  products_csv: artifacts/data_ingestion/raw_data/product_catalog.csv
+  customers_csv: C:/Users/RICH-FILES/Desktop/Datasets/bank_customers.csv
+  products_csv: C:/Users/RICH-FILES/Desktop/Datasets/product_catalog.csv
 
 database:
   root_dir: artifacts/database
-  db_file: artifacts/database/bank_recommender.db
+  db_file: C:/Users/RICH-FILES/Desktop/Datasets/bank_recommender.db
   tables:
     customers: customers
     products: products
+
 

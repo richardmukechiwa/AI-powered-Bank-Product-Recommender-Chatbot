@@ -143,4 +143,7 @@ def decodeImage(imgstring, fileName):
 def encodeImageIntoBase64(croppedImagePath):
     with open(croppedImagePath, "rb") as f:
         return base64.b64encode(f.read())
+    
+def save_csv_file(df, path: Path):
+    df.to_csv(path, index=False)
 

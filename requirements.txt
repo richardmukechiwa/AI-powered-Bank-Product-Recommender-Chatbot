@@ -12,4 +12,6 @@ joblib
 types-PyYAML
 streamlit
 faker
+setuptools
+streamlit-ace
 -e .

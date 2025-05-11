@@ -5,8 +5,8 @@ import yaml
 import joblib
 from ensure import ensure_annotations
 from box import ConfigBox
-from box.exceptions import BoxError
 from BankProducts import logger
+import base64
 
 
 @ensure_annotations
@@ -28,7 +28,7 @@ def read_yaml(path_to_yaml: Path) -> ConfigBox:
             content = yaml.safe_load(yaml_file)
             logger.info(f"yaml file: {path_to_yaml} loaded successfully")
             return ConfigBox(content)
-    except BoxError:
+    except ValueError:
         raise ValueError("yaml file is empty")
     except Exception as e:
         raise e
@@ -124,5 +124,23 @@ def get_size(path: Path) -> str:
     return f"~ {size_in_kb} KB"
 
 
+def decodeImage(imgstring, fileName):
+    """decode image from base64
 
+    Args:
+        image (str): base64 encoded image
+
+    Returns:
+        str: decoded image
+    """
+    imgdata = base64.b64decode(imgstring)
+    with open(fileName, 'wb') as f:
+        f.write(imgdata)
+        f.close()
+  
+    
+
+def encodeImageIntoBase64(croppedImagePath):
+    with open(croppedImagePath, "rb") as f:
+        return base64.b64encode(f.read())
 

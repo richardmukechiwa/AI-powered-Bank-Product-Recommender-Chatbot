@@ -3,9 +3,15 @@ artifacts_root: artifacts
 # Configuration for data generation process
 data_generation:
   num_customers: 7000
+  gen_root_dir: artifacts/data_generation
+  data_dir: artifacts/data_generation/raw_data
   output_dir: artifacts/data_generation
+  db_file: artifacts/database/bank_products_recommender.db
   customers_filename: bank_customers.csv
   products_filename: product_catalog.csv
+  table:
+    customers: customers
+    products: products
 
 # Consolidated database configuration
 database:

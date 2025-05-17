@@ -1,16 +1,26 @@
 artifacts_root: artifacts
 
-data_ingestion:
-  root_dir: artifacts/data_ingestion
-  raw_data_dir: artifacts/data_ingestion/raw_data
-  customers_csv: C:/Users/RICH-FILES/Desktop/Datasets/bank_customers.csv
-  products_csv: C:/Users/RICH-FILES/Desktop/Datasets/product_catalog.csv
+# Configuration for data generation process
+data_generation:
+  num_customers: 7000
+  output_dir: artifacts/data_generation
+  customers_filename: bank_customers.csv
+  products_filename: product_catalog.csv
 
+# Consolidated database configuration
 database:
   root_dir: artifacts/database
-  db_file: C:/Users/RICH-FILES/Desktop/Datasets/bank_recommender.db
+  db_file: artifacts/database/bank_recommender.db
   tables:
     customers: customers
     products: products
+
+# Configuration for data ingestion process
+data_ingestion:
+  root_dir: artifacts/data_ingestion
+  raw_data_dir: artifacts/data_ingestion/raw_data
+  customers_csv: artifacts/data_ingestion/raw_data/bank_customers.csv
+  products_csv: artifacts/data_ingestion/raw_data/product_catalog.csv
+
 
 

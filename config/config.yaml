@@ -21,8 +21,52 @@ data_ingestion:
   data_file: artifacts/data_generation/bank_products_recommender.db
   customers_csv: artifacts/data_ingestion/raw_data/bank_customers.csv
   products_csv: artifacts/data_ingestion/raw_data/product_catalog.csv
-  
 
+# Configuration for data validation process
+data_validation:
+  root_dir: artifacts/data_validation
+  data_dir: artifacts/data_validation
+  schema_file: config/schema.yaml
+  report_file: data_validation_report.yaml
+  report_page_file: data_validation_report_page.html
+  report_page_path: data_validation_report_page.html
 
+# Configuration for data transformation process
+data_transformation:
+  root_dir: artifacts/data_transformation
+  data_dir: artifacts/data_transformation
+  transformed_data_file: transformed_data.csv
+  transformed_data_path: artifacts
+
+# Configuration for model training process
+model_training:
+  root_dir: artifacts/model_training
+  data_dir: artifacts/model_training
+  model_dir: artifacts/model_training/models
+  model_file: bank_products_recommender_model.pkl
+  model_path: artifacts/model_training/models/bank_products_recommender_model.pkl
+  model_type: RandomForestClassifier
+  target_column: product_id
+  test_size: 0.2
+  random_state: 42
+
+# Configuration for model evaluation process
+model_evaluation:
+  root_dir: artifacts/model_evaluation
+  data_dir: artifacts/model_evaluation
+  model_dir: artifacts/model_training/models
+  model_file: bank_products_recommender_model.pkl
+  evaluation_report_file: evaluation_report.yaml
+  evaluation_report_page_file: evaluation_report_page.html
+  evaluation_report_page_path: artifacts/model_evaluation/evaluation_report_page.html 
+
+# Configuration for model deployment process
+model_deployment:
+  root_dir: artifacts/model_deployment
+  model_dir: artifacts/model_training/models
+  model_file: bank_products_recommender_model.pkl
+  deployment_dir: artifacts/model_deployment/deployment
+  deployment_file: bank_products_recommender_model.pkl
+  deployment_path: artifacts/model_deployment/deployment/bank_products_recommender_model.pkl
 
 

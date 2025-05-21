@@ -37,6 +37,8 @@ data_transformation:
   transformed_data_file: artifacts/data_transformation/transformed_data.csv
   customer_path: artifacts/data_ingestion/raw_data/bank_customers.csv
   product_path: artifacts/data_ingestion/raw_data/product_catalog.csv
+  train_data_file : artifacts/data_transformation/train_data.csv
+  test_data_file : artifacts/data_transformation/test_data.csv
 
 # Configuration for model training process
 model_training:

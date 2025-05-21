@@ -1,0 +1,18 @@
+COLUMNS:
+  customer_id: str
+  name: str
+  age: int64
+  gender: str
+  occupation: str
+  annual_income: float64
+  marital_status: str
+  credit_score: int64
+  existing_products: str
+  financial_goals: str
+  product_name: str
+  description: str
+  eligibility: str
+
+target_column:
+  name: existing_products
+

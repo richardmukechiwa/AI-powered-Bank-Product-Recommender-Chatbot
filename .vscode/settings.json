@@ -7,6 +7,8 @@
         "gini",
         "skyblue",
         "synthentic",
-        "xticks"
+        "xticklabels",
+        "xticks",
+        "yticklabels"
     ]
 }

@@ -1,5 +1,6 @@
 pandas 
 mlflow==2.2.2
+seaborn
 notebook
 numpy
 scikit-learn

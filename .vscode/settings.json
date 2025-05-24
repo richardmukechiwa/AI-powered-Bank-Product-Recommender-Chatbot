@@ -3,6 +3,7 @@
         "asctime",
         "cust",
         "edgecolor",
-        "synthentic"
+        "synthentic",
+        "xticks"
     ]
 }

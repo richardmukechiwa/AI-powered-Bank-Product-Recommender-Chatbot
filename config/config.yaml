@@ -31,9 +31,10 @@ data_validation:
   report_page_file: data_validation_report_page.html
   report_page_path: data_validation_report_page.html
 
-# Configuration for data transformation process
+# Configuration for data transformation processss
 data_transformation:
   root_dir: artifacts/data_transformation
+  joined_data_file: artifacts/data_transformation/joined_data.csv
   transformed_data_file: artifacts/data_transformation/transformed_data.csv
   customer_path: artifacts/data_ingestion/raw_data/bank_customers.csv
   product_path: artifacts/data_ingestion/raw_data/product_catalog.csv

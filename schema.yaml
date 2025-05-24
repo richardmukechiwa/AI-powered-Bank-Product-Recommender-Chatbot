@@ -14,5 +14,5 @@ COLUMNS:
   eligibility: str
 
 target_column:
-  name: existing_products
+  name: product_name
 

@@ -15,4 +15,5 @@ streamlit
 faker
 setuptools
 streamlit-ace
+shap
 -e .

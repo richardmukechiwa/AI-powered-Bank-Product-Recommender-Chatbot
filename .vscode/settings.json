@@ -5,6 +5,7 @@
         "edgecolor",
         "fontsize",
         "gini",
+        "shap",
         "skyblue",
         "synthentic",
         "xticklabels",

@@ -172,3 +172,20 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# Local configuration files
+#   These files are used to store local configuration settings, such as database connections,   
+#   API keys, or other sensitive information that should not be shared with others.
+
+*.csv
+*artifact
+*.json
+*.yaml          
+*.yml
+*.ini
+*.toml
+*.conf
+*.cfg
+*.env
+*.envrc

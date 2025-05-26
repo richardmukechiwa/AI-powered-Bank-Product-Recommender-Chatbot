@@ -6,6 +6,8 @@
         "envrc",
         "fontsize",
         "gini",
+        "multioutput",
+        "proba",
         "shap",
         "skyblue",
         "synthentic",

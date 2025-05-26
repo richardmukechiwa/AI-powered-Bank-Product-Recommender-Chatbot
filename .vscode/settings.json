@@ -1,11 +1,14 @@
 {
     "cSpell.words": [
         "asctime",
+        "beeswarm",
         "cust",
         "edgecolor",
         "envrc",
         "fontsize",
         "gini",
+        "importances",
+        "Multiclass",
         "multioutput",
         "proba",
         "shap",

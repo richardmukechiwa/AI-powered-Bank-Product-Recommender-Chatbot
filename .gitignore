@@ -174,11 +174,10 @@ cython_debug/
 .pypirc
 
 
-# Local configuration files
-.csv*
-artifacts*
+# Ignore data files and config files
+*.csv
 *.json
-*.yaml          
+*.yaml
 *.yml
 *.ini
 *.toml
@@ -186,3 +185,11 @@ artifacts*
 *.cfg
 *.env
 *.envrc
+
+# Optional: ignore specific folders
+artifacts/
+config/
+secrets/
+
+# Optional: ignore hidden files
+.*.env

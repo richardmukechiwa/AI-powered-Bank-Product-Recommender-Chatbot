@@ -1,34 +1,33 @@
 # Core dependencies
 pandas
-numpy==1.26.4
-scikit-learn==1.4.2
-joblib==1.3.2
-mlflow==2.2.2
+numpy
+scikit-learn
+joblib
+mlflow
 
 # Visualizations
-matplotlib==3.8.4
-seaborn==0.13.2
-shap==0.44.1
+matplotlib
+seaborn
 
 # Streamlit app
-streamlit==1.34.0
-streamlit-ace==0.1.1
+streamlit
+streamlit-ace
 
 # Data & utility
-python-box==6.0.2
-pyyaml==6.0.1
-tqdm==4.66.2
-faker==25.2.0
+python-box
+pyyaml
+tqdm
+faker
 
 # Type hints
-types-PyYAML==6.0.12.20240311
+types-PyYAML
 
 # Notebooks
-notebook==7.2.0
+notebook
 
 # Environment / setup
-setuptools>=65.0.0
-ensure==1.0.2
+setuptools
+ensure
 
 # Local project package
 -e .

@@ -4,7 +4,8 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.preprocessing import StandardScaler
+from BankProducts.entity.config_entity import DataTransformationConfig
+
 
 class DataTransformation:
     def __init__(self, config: DataTransformationConfig):

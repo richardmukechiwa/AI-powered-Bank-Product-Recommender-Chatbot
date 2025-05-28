@@ -2,7 +2,7 @@ import pandas as pd
 import sqlite3
 from pathlib import Path
 from BankProducts import  logger
-from BankProducts.entity.config_entity import DataGenerationConfig, TablesConfig
+from BankProducts.entity.config_entity import DataGenerationConfig
 
 class DataValidation:
     def __init__(self, config: DataGenerationConfig):

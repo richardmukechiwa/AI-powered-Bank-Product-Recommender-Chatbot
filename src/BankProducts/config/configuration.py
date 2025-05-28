@@ -1,6 +1,5 @@
 from BankProducts.constants import *
 from BankProducts.utils.common import read_yaml, create_directories
-from BankProducts.utils.logger import logger
 from BankProducts.entity.config_entity import (
                                         DataGenerationConfig,
                                         DataIngestionConfig,
@@ -10,6 +9,8 @@ from BankProducts.entity.config_entity import (
                                         FeatureImportanceConfig,
                                         TablesConfig
                                         )
+
+
 def get_feature_importance_config(self) -> FeatureImportanceConfig:
         config = self.config.feature_importance 
         schema = self.schema.target_column

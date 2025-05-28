@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module='_distutils_hack'
 from BankProducts import logger
 
 class ModelEvaluation:
-    def __init__(self, config):
+    def __init__(self, config: ModelEvaluationConfig):
         self.config = config
 
     def eval_metrics(self, actual, pred):

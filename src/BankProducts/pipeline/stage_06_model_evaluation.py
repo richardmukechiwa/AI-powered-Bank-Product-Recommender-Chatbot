@@ -11,11 +11,11 @@ class ModelEvaluationTrainingPipeline:
     def main(self):
         config = ConfigurationManager()
         model_evaluation_config = config.get_model_evaluation_config()
-        eval = ModelEvaluation(config=model_evaluation_config)
-        eval.log_into_mlflow()
-        eval.validate_model()
-        #eval.feature_importance()
-        eval.perform_grid_search()  
+        model_evaluator = ModelEvaluation(config=model_evaluation_config)
+        model_evaluator.log_into_mlflow()
+        model_evaluator.validate_model()
+        #model_evaluator.feature_importance()
+        #model_evaluator.perform_grid_search()  
         
 if __name__ == "__main__":
     try:

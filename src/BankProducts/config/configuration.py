@@ -1,5 +1,6 @@
 from BankProducts.constants import *
 from BankProducts.utils.common import read_yaml, create_directories
+from BankProducts import logger
 from BankProducts.entity.config_entity import (
                                         DataGenerationConfig,
                                         DataIngestionConfig,

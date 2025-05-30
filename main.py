@@ -3,27 +3,73 @@ from BankProducts.pipeline.stage_02_data_ingestion import DataIngestionTrainingP
 from BankProducts.pipeline.stage_03_data_validation import DataValidationTrainingPipeline
 from BankProducts.pipeline.stage_04_data_transformation import DataTransformationTrainingPipeline
 from BankProducts.pipeline.stage_05_model_training import ModelTrainingPipeline
-from BankProducts.pipeline.stage_06_model_evaluation import ModelEvaluationPipeline
-from BankProducts.pipeline.stage_07_importnant_features import FeatureImportancePipeline
+from BankProducts.pipeline.stage_06_model_evaluation import ModelEvaluationTrainingPipeline
+from BankProducts.pipeline.stage_07_important_features import FeatureImportanceTrainingPipeline
+from BankProducts import logger
 
 
 STAGE_NAME = "Data Generation Stage"
 try:
-    config = ConfigurationManager()
-    data_generation_config = config.get_data_generation_config()
-    data_gen = DataGeneration(config=data_generation_config)
-
-    # Generate data
-    customers_df, products_df = data_gen.generate_customer_data()
-
-    # Save to CSV
-    customers_path, products_path = data_gen.save_to_csv(customers_df, products_df, data_generation_config.output_dir)
-    logger.info(f"Customers data saved to {customers_path}")
-
-    # Save to DB
-    data_gen.save_to_db(customers_path, products_path, data_generation_config.db_file)
-    logger.info(f"Data saved to SQLite database at {data_generation_config.db_file}")
-
-    print("Data Generation Complete")
+    pipeline = DataGenerationTrainingPipeline()
+    pipeline.main()
+    logger.info(f"{STAGE_NAME} completed successfully")
 except Exception as e:
+    logger.exception(f"Error in {STAGE_NAME}: {e}")
+    raise
+
+STAGE_NAME = "Data Ingestion Stage"
+try:
+    pipeline = DataIngestionTrainingPipeline()
+    pipeline.main()
+    logger.info(f"{STAGE_NAME} completed successfully")
+except Exception as e:
+    logger.exception(f"Error in {STAGE_NAME}: {e}")
+    raise
+
+STAGE_NAME = "Data Validation Stage"
+try:
+    pipeline = DataValidationTrainingPipeline()
+    pipeline.main()
+    logger.info(f"{STAGE_NAME} completed successfully")
+except Exception as e:
+    logger.exception(f"Error in {STAGE_NAME}: {e}")
+    raise  
+ 
+STAGE_NAME = "Data Transformation Stage"
+try:
+    pipeline = DataTransformationTrainingPipeline()
+    pipeline.main()
+    logger.info(f"Data Transformation Stage completed successfully. {STAGE_NAME}")  
+except Exception as e:
+    logger.exception(f"Data Transformation Stage failed. {STAGE_NAME}") 
     raise e
+
+STAGE_NAME = "Model Training Stage"
+try:
+    pipeline = ModelTrainingPipeline()
+    pipeline.main()
+    logger.info(f"Model Training Stage completed successfully")
+except Exception as e:
+    logger.error(f"Model Training Stage failed with error: {str(e)}")
+    raise e
+
+STAGE_NAME = "Model Evaluation Stage"
+try:
+    model_evaluation = ModelEvaluationTrainingPipeline()
+    model_evaluation.main()
+    logger.info(" Model Evaluation Stage completed successfully")
+except Exception as e:
+    logger.error(f" Model Evaluation Stage failed with error {str(e)}")
+    raise e
+
+STAGE_NAME = "Feature Importance Stage"
+try:
+    pipeline  = FeatureImportanceTrainingPipeline()
+    pipeline.main()
+    logger.info(" Important Features Analysis completed")
+except Exception as e:
+    logger.error(f"Error in Important Features Analysis: {str(e)}")
+    raise e
+        
+            
+    

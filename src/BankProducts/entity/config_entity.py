@@ -56,7 +56,7 @@ class ModelTrainingConfig:
     min_samples_split: int
     min_samples_leaf: int
     n_estimators: int
-    max_depth: int
+    max_depth: str
     random_state: int
     class_weight: str
     n_jobs: int

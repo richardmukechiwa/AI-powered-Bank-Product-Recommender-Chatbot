@@ -1,10 +1,21 @@
 random_forest:
-    criterion: 'gini'
+    criterion: 'entropy'
     max_features: 'sqrt'
-    min_samples_split: 10
-    min_samples_leaf: 4
-    n_estimators: 50
+    min_samples_split: 2
+    min_samples_leaf: 1
+    n_estimators: 300
     max_depth: null
     random_state: 42
     class_weight: 'balanced'
     n_jobs: -1 
+
+xgb_classifier:
+    booster: 'gbtree'
+    objective: 'multi:softprob'
+    num_class: 5
+    n_estimators: 300
+    learning_rate : 0.05
+    max_depth: 6
+    subsample: 0.8
+    colsample_bytree: 0.8
+    random_state: 42

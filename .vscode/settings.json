@@ -2,6 +2,8 @@
     "cSpell.words": [
         "asctime",
         "beeswarm",
+        "bytree",
+        "colsample",
         "cust",
         "decending",
         "edgecolor",
@@ -9,6 +11,7 @@
         "fontsize",
         "gini",
         "importances",
+        "mudlogger",
         "Multiclass",
         "multioutput",
         "ndarray",

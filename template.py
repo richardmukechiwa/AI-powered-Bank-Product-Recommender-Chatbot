@@ -27,11 +27,13 @@ list_of_files = [
     "main.py",
     "pyproject.toml",
     "app.py",
+    ".env",
     "Dockerfile",
     "requirements.txt",
     "setup.py",
-    "research/trials.ipynb",
-    "test.py"
+    "research/trials.ipynb"
+    
+    
 
 
 ]

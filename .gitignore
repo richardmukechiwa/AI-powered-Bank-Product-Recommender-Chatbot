@@ -194,6 +194,3 @@ secrets/
 # Optional: ignore hidden files
 .*.env
 
-# Re-include specific subdirectory and file
-!artifacts/model_training/
-!artifacts/model_training/grid_search_model.joblib

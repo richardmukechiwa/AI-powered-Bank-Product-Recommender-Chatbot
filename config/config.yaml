@@ -1,26 +1,17 @@
 artifacts_root: artifacts
 
-# Configuration for data generation process
-data_generation:
-  num_customers: 7000
-  gen_root_dir: artifacts/data_generation
-  data_dir: artifacts/data_generation/raw_data
-  output_dir: artifacts/data_generation
-  db_file: artifacts/data_generation/bank_products_recommender.db
-  customers_filename: bank_customers.csv
-  products_filename: product_catalog.csv
-  table:
-    customers: customers
-    products: products
-
-
 # Configuration for data ingestion process
 data_ingestion:
   root_dir: artifacts/data_ingestion
+  source_URL: https://github.com/richardmukechiwa/Datasets/raw/refs/heads/main/Banking_Dataset.zip
+  local_data_file: artifacts/data_ingestion/data.zip
+  unzip_dir: artifacts/data_ingestion
   raw_data_dir: artifacts/data_ingestion/raw_data
   data_file: artifacts/data_generation/bank_products_recommender.db
   customers_csv: artifacts/data_ingestion/raw_data/bank_customers.csv
-  products_csv: artifacts/data_ingestion/raw_data/product_catalog.csv
+  customers_filename: bank_transactions.csv
+  table:
+    bank_transactions: bank_transactions
 
 # Configuration for data validation process
 data_validation:

@@ -17,7 +17,7 @@ streamlit-ace
 python-box
 pyyaml
 tqdm
-faker
+python-dotnev
 
 # Type hints
 types-PyYAML

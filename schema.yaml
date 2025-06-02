@@ -1,18 +1,23 @@
 COLUMNS:
-  customer_id: str
-  name: str
-  age: int64
-  gender: str
-  occupation: str
-  annual_income: float64
-  marital_status: str
-  credit_score: int64
-  existing_products: str
-  financial_goals: str
-  product_name: str
-  description: str
-  eligibility: str
+  TransactionID: int64
+  CustomerID: int64
+  TransactionDate: datetime64[ns]
+  TransactionType: str
+  Amount: float64
+  ProductCategory: str
+  ProductSubcategory: str
+  BranchCity: str
+  BranchLat: float64
+  BranchLong: float64
+  Channel: str
+  Currency: str
+  CreditCardFees: float64
+  InsuranceFees: float64
+  LatePaymentAmount: float64
+  CustomerScore: int64
+  MonthlyIncome: float64
+  CustomerSegment: str
+  RecommendedOffer: str
 
 target_column:
-  name: product_name
-
+  name: RecommendedOffer

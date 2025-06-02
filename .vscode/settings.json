@@ -18,6 +18,7 @@
         "multioutput",
         "ndarray",
         "proba",
+        "regclass",
         "shap",
         "skyblue",
         "synthentic",

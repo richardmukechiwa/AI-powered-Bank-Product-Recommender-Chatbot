@@ -3,19 +3,16 @@ artifacts_root: artifacts
 # Configuration for data ingestion process
 data_ingestion:
   root_dir: artifacts/data_ingestion
-  source_URL: https://github.com/richardmukechiwa/Datasets/raw/refs/heads/main/Banking_Dataset.zip
-  local_data_file: artifacts/data_ingestion/data.zip
-  unzip_dir: artifacts/data_ingestion
-  raw_data_dir: artifacts/data_ingestion/raw_data
-  data_file: artifacts/data_generation/bank_products_recommender.db
-  customers_csv: artifacts/data_ingestion/raw_data/bank_customers.csv
-  customers_filename: bank_transactions.csv
-  table:
-    bank_transactions: bank_transactions
+  local_data_file: "https://github.com/richardmukechiwa/Datasets/raw/refs/heads/main/Banking_Dataset.csv"
+  export_csv_path: artifacts/data_ingestion/customer_data.csv
+  table_name: bank_transactions
+
 
 # Configuration for data validation process
 data_validation:
-  root_dir: artifacts/data_validation
+  val_root_dir: artifacts/data_validation
+  customer_data: artifacts/data_ingestion/customer_data.csv
+  STATUS_FILE: artifacts/data_validation/status.txt
   data_dir: artifacts/data_validation
   schema_file: config/schema.yaml
  

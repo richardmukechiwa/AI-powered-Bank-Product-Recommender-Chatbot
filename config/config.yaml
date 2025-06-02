@@ -13,8 +13,7 @@ data_validation:
   val_root_dir: artifacts/data_validation
   customer_data: artifacts/data_ingestion/customer_data.csv
   STATUS_FILE: artifacts/data_validation/status.txt
-  data_dir: artifacts/data_validation
-  schema_file: config/schema.yaml
+
  
 # Configuration for data transformation process
 data_transformation:

@@ -2,6 +2,8 @@
     "cSpell.words": [
         "asctime",
         "beeswarm",
+        "branchlat",
+        "branchlong",
         "bytree",
         "colsample",
         "cust",
@@ -23,6 +25,7 @@
         "skyblue",
         "synthentic",
         "Transactiondate",
+        "transactionid",
         "xticklabels",
         "xticks",
         "yaxis",

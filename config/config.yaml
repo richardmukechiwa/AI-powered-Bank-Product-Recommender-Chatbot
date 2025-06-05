@@ -5,6 +5,7 @@ data_ingestion:
   root_dir: artifacts/data_ingestion
   local_data_file: "https://github.com/richardmukechiwa/Datasets/raw/refs/heads/main/Banking_Dataset.csv"
   export_csv_path: artifacts/data_ingestion/customer_data.csv
+  output_path:  artifacts/data_ingestion/customer_data.csv
   table_name: bank_transactions
 
 

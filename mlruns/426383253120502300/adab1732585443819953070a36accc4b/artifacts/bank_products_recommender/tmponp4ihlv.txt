@@ -1,0 +1,11 @@
+                 precision    recall  f1-score   support
+
+    Credit Card       0.17      0.26      0.21       137
+ Education Loan       0.18      0.25      0.21       146
+  Fixed Deposit       0.21      0.10      0.14       146
+      Home Loan       0.18      0.19      0.18       148
+Savings Account       0.25      0.16      0.20       162
+
+       accuracy                           0.19       739
+      macro avg       0.20      0.19      0.19       739
+   weighted avg       0.20      0.19      0.19       739

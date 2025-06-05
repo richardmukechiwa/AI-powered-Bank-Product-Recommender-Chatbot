@@ -187,8 +187,8 @@ cython_debug/
 *.envrc
 
 # Optional: ignore specific folders
-**/artifacts/
-config/
+!**/artifacts/
+!config/
 secrets/
 
 # Optional: ignore hidden files

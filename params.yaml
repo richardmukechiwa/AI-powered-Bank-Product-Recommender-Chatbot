@@ -3,19 +3,18 @@ random_forest:
     max_features: 'sqrt'
     min_samples_split: 2
     min_samples_leaf: 1
-    n_estimators: 100
+    n_estimators: 50
     max_depth: null
     random_state: 42
     class_weight: 'balanced'
     n_jobs: -1 
 
-#xgb_classifier:
-    #booster: 'gbtree'
-    #objective: 'multi:softprob'
-    #num_class: 5
-    #n_estimators: 300
-    #learning_rate : 0.05
-    #max_depth: 6
-    #subsample: 0.8
-    #colsample_bytree: 0.8
-    #random_state: 42
+logistic_regression:
+    penalty: 'l2'
+    C: 1.0
+    solver: 'lbfgs'
+    max_iter: 100
+    random_state: 42
+    class_weight: 'balanced'
+    n_jobs: -1
+

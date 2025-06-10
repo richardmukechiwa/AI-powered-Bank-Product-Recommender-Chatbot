@@ -1,0 +1,13 @@
+                                   precision    recall  f1-score   support
+
+       Exclusive Platinum Package       0.99      0.99      0.99       800
+Financial Literacy Program Access       0.99      0.98      0.98      1071
+   Gold Card with Travel Benefits       0.97      1.00      0.99       552
+         Mid-tier Savings Booster       1.00      0.96      0.98      1530
+             No-Fee Basic Account       0.89      1.00      0.94       270
+     Personal Loan Cashback Offer       0.95      1.00      0.98       544
+      Premium Investment Services       1.00      0.99      0.99      1233
+
+                         accuracy                           0.98      6000
+                        macro avg       0.97      0.99      0.98      6000
+                     weighted avg       0.98      0.98      0.98      6000

@@ -2,41 +2,52 @@ import pandas as pd
 import sqlite3
 from pathlib import Path
 from BankProducts import  logger
-from BankProducts.entity.config_entity import DataGenerationConfig
+from BankProducts.entity.config_entity import DataValidationConfig
 
 class DataValidation:
-    def __init__(self, config: DataGenerationConfig):
+    def __init__(self, config: DataValidationConfig):
         self.config = config
-        
-    def validate_file_exists(self, path: Path, name: str):
-        path = Path(path)
-        if not path.is_absolute():
-            path = self.config.gen_root_dir / path
-        if not path.exists():
-            raise FileNotFoundError(f"{name} not found at: {path}")
-        print(f" {name} exists at {path}")
+        logger.info("Data Validation started")
 
-    def validate_csv_not_empty(self, path: Path, name: str):
-        path= Path(path)
-        if not path.is_absolute():
-            path = self.config.gen_root_dir / path
-        df = pd.read_csv(path)
-        if df.empty:
-            raise ValueError(f"{name} is empty.")
-        print(f" {name} is not empty with {len(df)} rows")
+    def validate_all_columns(self) -> bool:
+        try:
+            data = pd.read_csv(self.config.customer_data)
+            logger.info(f"Data loaded from {self.config.customer_data}")
 
-    def validate_database_tables(self):
-        expected = self.config.table
-        with sqlite3.connect(self.config.db_file) as conn:
-            result = conn.execute("SELECT name FROM sqlite_master WHERE type='table';")
-            actual_tables = {row[0] for row in result.fetchall()}
+            # Normalize column names to lowercase
+            data.columns = data.columns.str.lower()
+            schema_cols = {col.lower(): dtype for col, dtype in self.config.all_schema.items()}
 
-        missing = []
-        for table in [expected.customers, expected.products]:
-            if table not in actual_tables:
-                missing.append(table)
+            # Optional: Convert datetime columns
+            if 'transactiondate' in data.columns:
+                data['transactiondate'] = pd.to_datetime(data['transactiondate'])
 
-        if missing:
-            raise ValueError(f"Missing tables: {missing}")
-        print(f" All expected tables exist in the DB: {expected.customers}, {expected.products}")
-        logger.info(f"Data validation completed successfully.")
+            if data.empty:
+                logger.warning("Data is empty")
+                raise ValueError("Customer data is empty.")
+
+            logger.info(f"Data shape: {data.shape}")
+
+            data_cols = set(data.columns)
+            schema_keys = set(schema_cols.keys())
+
+            missing_in_data = schema_keys - data_cols
+            extra_in_data = data_cols - schema_keys
+
+            validation_status = not missing_in_data and not extra_in_data
+            
+            os.makedirs(os.path.dirname(self.config.STATUS_FILE), exist_ok=True)
+
+            with open(self.config.STATUS_FILE, 'w') as f:
+                f.write(f"Validation status: {validation_status}\n")
+                if missing_in_data:
+                    f.write(f"Missing columns: {missing_in_data}\n")
+                if extra_in_data:
+                    f.write(f"Extra columns: {extra_in_data}\n")
+
+            logger.info(f"Validation completed. Status: {validation_status}")
+            return validation_status
+
+        except Exception as e:
+            logger.exception("Exception occurred during data validation")
+            raise e

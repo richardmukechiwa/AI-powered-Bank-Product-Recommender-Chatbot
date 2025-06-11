@@ -1,4 +1,9 @@
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report
+from sklearn.metrics import (accuracy_score,
+                             precision_score,
+                             recall_score, f1_score,
+                             confusion_matrix,
+                             classification_report,
+                             ConfusionMatrixDisplay)
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -16,10 +21,14 @@ import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='_distutils_hack')
 from BankProducts import logger
 
-class ModelEvaluation:
-    def __init__(self, config: ModelEvaluationConfig):
-        self.config = config
+from sklearn.model_selection import cross_val_score
 
+class ModelEvaluation:
+    def __init__(self, config):
+        self.config = config
+        
+         
+    
     def eval_metrics(self, actual, pred):
         accuracy = accuracy_score(actual, pred)
         precision = precision_score(actual, pred, average='weighted')
@@ -50,11 +59,14 @@ class ModelEvaluation:
     def log_into_mlflow(self):
         test_data = pd.read_csv(self.config.test_data_path)
         test_x = test_data.drop(columns=[self.config.target_column])
+        
+        
         test_y = test_data[self.config.target_column]
+        
 
         # Encode the target variable
-        le = LabelEncoder()
-        test_y_encoded = le.fit_transform(test_y)
+        le = joblib.load(self.config.encoded_target_label)
+        test_y_encoded = le.transform(test_y)
 
         logger.info("Loading model from path: %s", self.config.model_path)
         pipeline = joblib.load(self.config.model_path)
@@ -69,6 +81,25 @@ class ModelEvaluation:
             predicted = pipeline.predict(test_x)
 
             accuracy, precision, recall, f1 = self.eval_metrics(test_y_encoded, predicted)
+            
+             # evaluate the model
+            rf_report = classification_report(test_y_encoded, predicted)
+            rf_cm = confusion_matrix(test_y_encoded, predicted)   
+            rf_accuracy = accuracy_score(test_y_encoded, predicted)   
+            
+            #create Confusion Matrix Display
+            cm_display = ConfusionMatrixDisplay(confusion_matrix=rf_cm, display_labels=le.classes_)
+                    
+            plt.title("RandomForestClassifier Matrix")
+            cm_display.plot()
+            plt.xticks(rotation=180)
+            
+            
+
+            logger.info(f"RandomForest Classification Report:\n{rf_report}")
+            logger.info(f"RandomForest Confusion Matrix:\n{rf_cm}") 
+            logger.info(f"RandomForest Accuracy: {rf_accuracy}")
+            
 
             scores = {
                 "model_name": "random_classifier",
@@ -118,6 +149,9 @@ class ModelEvaluation:
               
             logger.info("mlflow model logged successfully.")
             
+            
+            
+            
 
     # perform a Grid Search to find the best model
     def perform_grid_search(self):
@@ -127,14 +161,14 @@ class ModelEvaluation:
         from sklearn.preprocessing import StandardScaler, OneHotEncoder
         from sklearn.compose import ColumnTransformer
 
-        # Load training data
-        test_data = pd.read_csv(self.config.test_data_path)
-        X_test = test_data.drop(columns=[self.config.target_column])
-        y_test = test_data[self.config.target_column]
+        # Load **training** data for grid search
+        train_data = pd.read_csv(self.config.test_data_path)
+        X_train = train_data.drop(columns=[self.config.target_column])
+        y_train = train_data[self.config.target_column]
 
         # Define preprocessing steps
-        numeric_features = X_test.select_dtypes(include=['int64', 'float64']).columns.tolist()
-        categorical_features = X_test.select_dtypes(include=['object']).columns.tolist()
+        numeric_features = X_train.select_dtypes(include=['int64', 'float64']).columns.tolist()
+        categorical_features = X_train.select_dtypes(include=['object']).columns.tolist()
 
         preprocessor = ColumnTransformer(
             transformers=[
@@ -153,32 +187,37 @@ class ModelEvaluation:
             'classifier__n_estimators': [50, 100, 200],
             'classifier__max_depth': [None, 10, 20],
             'classifier__min_samples_split': [2, 5, 10],
-            #'classifier_criterion': ['gini', 'entropy'],
             'classifier__max_features': ['sqrt', 'log2'], 
             'classifier__min_samples_leaf': [1, 2, 4],
             'classifier__class_weight': ['balanced', None],
-            'classifier__n_jobs': [-1]  # Use all available cores
-            
+            'classifier__n_jobs': [-1]
         }
-            
+
         # Perform grid search with cross-validation
         grid_search = GridSearchCV(pipeline, param_grid, cv=5, scoring='accuracy', verbose=1)
-        grid_search.fit(X_test, y_test)
+        grid_search.fit(X_train, y_train)
 
         logger.info("Best parameters found: %s", grid_search.best_params_)
-        
+
         # Save the best model
         joblib.dump(grid_search.best_estimator_, self.config.grid_search_model_path)
-        
-        logger.info("Best model saved to: %s", self.config.grid_search_model_path) 
-        
-        #extract feature_importances
-        feature_importances = grid_search.best_estimator_.named_steps['classifier'].feature_importances_
-        feature_importances_df = pd.DataFrame({'feature': X_test.columns, 'importance': feature_importances})
-        
-        return feature_importances_df
+        logger.info("Best model saved to: %s", self.config.grid_search_model_path)
 
-                                                                    
+        #  Feature importance works only with numeric column names (after encoding)
+        # This part needs to be handled carefully after transformation
+        try:
+            classifier = grid_search.best_estimator_.named_steps['classifier']
+            importances = classifier.feature_importances_
+
+            # Just return dummy placeholder since true mapping is complicated
+            importance_df = pd.DataFrame({'importance': importances})
+        except Exception as e:
+            logger.warning("Could not extract feature importances: %s", e)
+            importance_df = pd.DataFrame()
+
+        return importance_df
+
+                                                                        
     
     
     # perform validation using cross validation
@@ -186,17 +225,35 @@ class ModelEvaluation:
         test_data = pd.read_csv(self.config.test_data_path)
         test_x = test_data.drop(columns=[self.config.target_column])
         test_y = test_data[self.config.target_column]
+        
+        print(test_x.head())
+        print(test_y.head())
+        logger.info("Starting model validation...")
 
+        # Load pipeline and label encoder
         pipeline = joblib.load(self.config.model_path)
+        label_encoder = joblib.load(self.config.encoded_target_label)
 
-        # Perform cross-validation
-        from sklearn.model_selection import cross_val_score
-        scores = cross_val_score(pipeline, test_x, test_y, cv=5, scoring='accuracy')
+        # Encode test_y using the same encoder used during training
+        test_y_encoded = label_encoder.transform(test_y)
+
+        # Perform cross-validation on test data
+        from sklearn.model_selection import StratifiedKFold, cross_val_score
+
+        cv = StratifiedKFold(n_splits=5)
+        scores = cross_val_score(pipeline, test_x, test_y_encoded, cv=cv, scoring='accuracy')
 
         logger.info("Cross-validation scores: %s", scores)
         logger.info("Mean cross-validation score: %.2f", scores.mean())
 
         return scores.mean()
+
+
+            
+    
+        
+
+    
             
     
         

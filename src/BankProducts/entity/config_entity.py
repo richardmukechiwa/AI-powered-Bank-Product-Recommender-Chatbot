@@ -2,30 +2,20 @@ from dataclasses import dataclass
 from pathlib import Path
 
 @dataclass(frozen=True)
-class TablesConfig:
-    customers: str
-    products: str
-
-@dataclass(frozen=True)
-class DataGenerationConfig:
-    num_customers: int
-    output_dir: Path
-    customers_filename: str
-    products_filename: str
-    gen_root_dir: Path
-    data_dir: Path
-    db_file: Path
-    table: TablesConfig
-    
-@dataclass(frozen=True)
 class DataIngestionConfig:
     root_dir: Path
-    raw_data_dir: Path
-    data_file: Path
-    customers_csv: Path
-    products_csv: Path
-    customers_table: str
-    products_table: str
+    local_data_file: Path
+    #export_csv_path: Path
+    output_path: Path
+    table_name: str
+    
+@dataclass(frozen=True)
+class DataValidationConfig:
+    val_root_dir: Path
+    STATUS_FILE: str
+    customer_data: Path
+    all_schema: dict
+    customer_data: Path
     
 
 @dataclass(frozen=True)
@@ -36,13 +26,10 @@ class DataTransformationConfig:
     root_dir: Path
     transformed_data_file: Path
     customer_path: Path
-    product_path: Path
     train_data_file: Path
     test_data_file: Path
     target_column: str
-    joined_data_file: Path
-    
-    
+
 @dataclass(frozen=True)
 class ModelTrainingConfig:
     """Configuration for model training.
@@ -51,16 +38,15 @@ class ModelTrainingConfig:
     root_dir: Path
     test_data_dir: Path
     train_data_dir: Path
-    criterion: str
-    max_features: int
-    min_samples_split: int
-    min_samples_leaf: int
-    n_estimators: int
-    max_depth: str
     random_state: int
     class_weight: str
     n_jobs: int
     target_column: str
+    label_encoder_file: str
+    C: float
+    penalty: str
+    solver: str
+    max_iter: int
     
 @dataclass(frozen=True)
 class ModelEvaluationConfig:
@@ -71,7 +57,10 @@ class ModelEvaluationConfig:
     target_column: str
     params: dict[str, str]
     grid_search_model_path: Path
+    train_data_path: Path
+    encoded_target_label: Path
     
+
 @dataclass(frozen=True)
 class FeatureImportanceConfig:
     """Configuration for feature importance analysis.
@@ -82,4 +71,3 @@ class FeatureImportanceConfig:
     test_data_path: Path
     feature_importance_file: Path
     target_column: str
-    

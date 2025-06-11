@@ -15,7 +15,9 @@ class DataTransformationTrainingPipeline():
         
         data_transformation = DataTransformation(config=data_transformation_config)
         
-        data_transformation.join_datasets()
+        
+        data_transformation.convert_eur_to_usd_and_drop_currency()
+        
         data_transformation.transform_data()
         data_transformation.split_data()
         

@@ -188,15 +188,15 @@ class DataTransformation:
         
        
         # use plotly 
-        import plotly.express as px
-        fig = px.bar(data, x="branchcity", y="amount", color="transactiontype", barmode="group")
-        fig.show()
+        #import plotly.express as px
+        #fig = px.bar(data, x="branchcity", y="amount", color="transactiontype", barmode="group")
+        #fig.show()
         
         #plot "branch city" vs "amount" scatter plot
-        import plotly.graph_objects as go
-        fig = go.Figure(data=[go.Bar(x=data['branchcity'], y=data['amount'])])          
-        fig.update_layout(title="Branch City vs Amount Plot", xaxis_title="Branch City", yaxis_title="Amount")          
-        fig.show()    
+        #import plotly.graph_objects as go
+        #fig = go.Figure(data=[go.Bar(x=data['branchcity'], y=data['amount'])])          
+        #fig.update_layout(title="Branch City vs Amount Plot", xaxis_title="Branch City", yaxis_title="Amount")          
+        #fig.show()    
         
         # drop branch city column
         data.drop(columns=['branchcity'], inplace=True)
@@ -219,13 +219,6 @@ class DataTransformation:
         data.to_csv(self.config.transformed_data_file, index=False)
         logger.info(f"Transformed data saved to {self.config.transformed_data_file}")
         print(f"Transformed data saved to {self.config.transformed_data_file}")
-        
-        
-        
-        
-        
-        
-        
         return data
       
     def split_data(self):

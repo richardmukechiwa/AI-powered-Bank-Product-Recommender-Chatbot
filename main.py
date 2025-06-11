@@ -1,4 +1,4 @@
-
+import os
 from BankProducts.pipeline.stage_01_data_ingestion import DataIngestionTrainingPipeline
 from BankProducts.pipeline.stage_02_data_validation import DataValidationTrainingPipeline
 from BankProducts.pipeline.stage_03_data_transformation import DataTransformationTrainingPipeline
@@ -7,15 +7,6 @@ from BankProducts.pipeline.stage_05_model_evaluation import ModelEvaluationTrain
 from BankProducts.pipeline.stage_06_important_features import FeatureImportanceTrainingPipeline
 from BankProducts import logger
 
-
-STAGE_NAME = "Data Generation Stage"
-try:
-    pipeline = DataGenerationTrainingPipeline()
-    pipeline.main()
-    logger.info(f"{STAGE_NAME} completed successfully")
-except Exception as e:
-    logger.exception(f"Error in {STAGE_NAME}: {e}")
-    raise
 
 STAGE_NAME = "Data Ingestion Stage"
 try:

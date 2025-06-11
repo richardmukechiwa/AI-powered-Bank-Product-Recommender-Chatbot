@@ -238,7 +238,8 @@ class ModelEvaluation:
         test_y_encoded = label_encoder.transform(test_y)
 
         # Perform cross-validation on test data
-        from sklearn.model_selection import StratifiedKFold, cross_val_score
+        from sklearn.model_selection import StratifiedKFold
+        from sklearn.model_selection import  cross_val_score
 
         cv = StratifiedKFold(n_splits=5)
         scores = cross_val_score(pipeline, test_x, test_y_encoded, cv=cv, scoring='accuracy')

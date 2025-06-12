@@ -186,18 +186,7 @@ class DataTransformation:
         plt.ylabel("Amount")
         plt.savefig("branchcity_amnt.png")
         
-       
-        # use plotly 
-        #import plotly.express as px
-        #fig = px.bar(data, x="branchcity", y="amount", color="transactiontype", barmode="group")
-        #fig.show()
-        
-        #plot "branch city" vs "amount" scatter plot
-        #import plotly.graph_objects as go
-        #fig = go.Figure(data=[go.Bar(x=data['branchcity'], y=data['amount'])])          
-        #fig.update_layout(title="Branch City vs Amount Plot", xaxis_title="Branch City", yaxis_title="Amount")          
-        #fig.show()    
-        
+    
         # drop branch city column
         data.drop(columns=['branchcity'], inplace=True)
         print(":"*100)

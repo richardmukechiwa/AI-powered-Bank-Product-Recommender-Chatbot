@@ -12,8 +12,6 @@ class FeatureImportanceTrainingPipeline:
         config = ConfigurationManager()
         feature_importance_config = config.get_feature_importance_config()
         feature_imp = FeatureImportance(config = feature_importance_config)
-        logger.info(f"Feature Importance Config: {feature_importance_config}")
-        #feature_imp.important_features()
         feature_imp.important_feature()
         
 if __name__ == "__main__":

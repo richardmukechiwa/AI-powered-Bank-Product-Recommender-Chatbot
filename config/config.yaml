@@ -54,4 +54,12 @@ feature_importance:
   test_data_path: artifacts/data_transformation/test_data.csv
   feature_importance_file: artifacts/feature_importance/feature_importance.json 
 
+# Final Model
+retrained_model:
+  root_dir: artifacts/final_model
+  model_path: artifacts/model_training/model.joblib
+  training_data: artifacts/data_transformation/train_data.csv
+  testing_data: artifacts/data_transformation/test_data.csv
+  final_model: artifacts/retrained_model/fin_model.joblib
+
 

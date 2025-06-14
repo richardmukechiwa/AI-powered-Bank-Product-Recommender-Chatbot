@@ -57,9 +57,10 @@ feature_importance:
 # Final Model
 retrained_model:
   root_dir: artifacts/final_model
-  model_path: artifacts/model_training/model.joblib
+  model_encoder: artifacts/retrained_model/labelencorder.joblib
   training_data: artifacts/data_transformation/train_data.csv
   testing_data: artifacts/data_transformation/test_data.csv
   final_model: artifacts/retrained_model/fin_model.joblib
+  metric_file: artifacts/retrained_model/metrics.json
 
 

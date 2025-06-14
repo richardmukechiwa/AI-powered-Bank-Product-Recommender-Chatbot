@@ -27,6 +27,7 @@
         "insurancefees",
         "interventional",
         "isin",
+        "labelencorder",
         "latepaymentamount",
         "liblinear",
         "logloss",
@@ -51,6 +52,7 @@
         "xticklabels",
         "xticks",
         "yaxis",
-        "yticklabels"
+        "yticklabels",
+        "yticks"
     ]
 }

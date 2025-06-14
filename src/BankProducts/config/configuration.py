@@ -9,6 +9,8 @@ from BankProducts.entity.config_entity import (
                                         ModelTrainingConfig,
                                         ModelEvaluationConfig,
                                         FeatureImportanceConfig,
+                                        FinalModelConfig
+                                        
                                         
                                         )
 
@@ -156,6 +158,41 @@ class ConfigurationManager:
         )
         logger.info(f"Feature Importance Config: {feature_importance_config}")
         return feature_importance_config
+        
+        
+    def get_final_model_config(self)-> FinalModelConfig:
+        """Returns the final model configuration."""
+        config = self.config.retrained_model
+        params = self.params.logistic_regression
+        schema = self.schema.target_column
+        
+        create_directories([self.config.artifacts_root])
+        
+        final_model_config = FinalModelConfig(
+          
+           target_column=schema.name,
+           training_data= Path(config.training_data),
+           testing_data= Path(config.testing_data),
+           final_model= Path(config.final_model),
+           penalty= params.penalty,
+           C= params.C,
+           max_iter= params.max_iter,
+           random_state= params.random_state,
+           solver= params.solver,
+           n_jobs= params.n_jobs,
+           model_encoder= Path(config.model_encoder),
+           class_weight= params.class_weight,
+           metric_file= Path(config.metric_file)
+           
+           
+           
+                         
+            
+        )
+        
+        
+        
+        return final_model_config   
         
     
     

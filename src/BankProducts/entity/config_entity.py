@@ -71,3 +71,21 @@ class FeatureImportanceConfig:
     test_data_path: Path
     feature_importance_file: Path
     target_column: str
+    
+@dataclass(frozen=True)
+class FinalModelConfig: 
+    """Configuration for the final model"""
+    
+    training_data: Path
+    testing_data: Path
+    final_model: Path
+    target_column: str
+    penalty: str
+    C: float
+    solver: str
+    max_iter: int
+    random_state: int
+    class_weight: str
+    n_jobs: int
+    model_encoder: Path
+    metric_file: Path

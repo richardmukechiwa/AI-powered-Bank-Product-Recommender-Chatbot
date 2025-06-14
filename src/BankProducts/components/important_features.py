@@ -8,113 +8,30 @@ from BankProducts.entity.config_entity import FeatureImportanceConfig
 class FeatureImportance:
     def __init__(self, config: FeatureImportanceConfig):
         self.config = config
-        self.pipeline = None
-        self.X_train = None
-        self.X_test = None
-        self.y_train = None
-        self.y_test = None
-        self.processor = None
-
-    def important_features(self):
-        import joblib
-        import shap
-        import pandas as pd
-        import numpy as np
-        import matplotlib.pyplot as plt
-        import os
-        
-        logger.info("Important Features")
-
-        test_data = pd.read_csv(self.config.test_data_path)
-        test_x = test_data.drop(self.config.target_column, axis=1)
-
-        pipeline = joblib.load(self.config.grid_search_model)
-
-        preprocessor = pipeline.named_steps['preprocessor']
-        model = pipeline.named_steps['classifier']
-
-        # Transform test data using preprocessor
-        X_processed = preprocessor.transform(test_x)
-
-        # Get feature names after preprocessing
-        try:
-            feature_names = preprocessor.get_feature_names_out()
-        except AttributeError:
-            num_features = preprocessor.transformers_[0][2]
-            cat_encoder = preprocessor.transformers_[1][1]
-            cat_features = cat_encoder.get_feature_names_out(preprocessor.transformers_[1][2])
-            feature_names = np.concatenate([num_features, cat_features])
-
-        X_df = pd.DataFrame(
-            X_processed.toarray() if hasattr(X_processed, 'toarray') else X_processed,
-            columns=feature_names
-        )
-
-        print(X_df.columns)
-
-        # Create SHAP explainer
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(X_df)
-
-        # Handle multiclass vs binary/regression
-        if isinstance(shap_values, list) and isinstance(shap_values[0], np.ndarray):
-            # Multiclass classification (shap_values is a list of arrays)
-            print("Multiclass classification detected.")
-            
-            # Average absolute SHAP values across all classes
-            shap_array = np.abs(np.array(shap_values))  # shape: (n_classes, n_samples, n_features)
-            shap_mean = shap_array.mean(axis=0)         # shape: (n_samples, n_features)
-            shap_df = pd.DataFrame(shap_mean, columns=X_df.columns)
-
-            # Optional: Save summary plots for each class
-            for i, class_shap in enumerate(shap_values):
-                shap.summary_plot(class_shap, X_df, show=False)
-                plt.title(f"SHAP Summary - Class {i}")
-                plt.savefig(f"{self.config.feature_importance_file.stem}_class_{i}.png", bbox_inches='tight')
-                plt.close()
-
-        else:
-            # Binary classification or regression
-            print("Binary classification or regression detected.")
-            shap_df = pd.DataFrame(shap_values, columns=X_df.columns)
-
-            shap.summary_plot(shap_values, X_df, show=False)
-            plt.savefig(f"{self.config.feature_importance_file.stem}.png", bbox_inches='tight')
-            plt.close()
-
-        # Compute mean absolute SHAP values
-        shap_abs_mean = shap_df.abs().mean().sort_values(ascending=False)
-
-        # Select top N important features
-        top_n = 10
-        top_features = shap_abs_mean.head(top_n).index.tolist()
-
-        print("Top Important Features:")
-        print(top_features)
-
-        # Save to JSON
-        os.makedirs(self.config.feature_importance_file.parent, exist_ok=True)
-        shap_abs_mean.to_json(self.config.feature_importance_file)
 
     def important_feature(self):
-        
-        """Compute and save SHAP feature importance for the model."""
-        # Compute feature importances robustly for multiclass
-        
-        logger.info("Important Feature search")
         import joblib
         import shap
         import pandas as pd
         import numpy as np
+        import os
+        import matplotlib.pyplot as plt
 
+        logger.info("Starting SHAP feature importance calculation...")
+
+        # Load data
         test_data = pd.read_csv(self.config.test_data_path)
         test_x = test_data.drop(self.config.target_column, axis=1)
 
+        # Load model and preprocessor
         pipeline = joblib.load(self.config.grid_search_model)
         preprocessor = pipeline.named_steps['preprocessor']
-        model = pipeline.named_steps['classifier']
+        model = pipeline.named_steps['log_regression']
 
+        # Transform data
         X_processed = preprocessor.transform(test_x)
+
+        # Get feature names
         try:
             feature_names = preprocessor.get_feature_names_out()
         except AttributeError:
@@ -128,37 +45,62 @@ class FeatureImportance:
             columns=feature_names
         )
 
-        explainer = shap.TreeExplainer(model)
+        # SHAP Explainer
+        explainer = shap.LinearExplainer(model, X_df, feature_perturbation="interventional")
         shap_values = explainer.shap_values(X_df)
 
-        # Handle multiclass
-        if isinstance(shap_values, np.ndarray) and shap_values.ndim == 3:
-            # shape: (n_samples, n_features, n_classes)
-            # Take mean absolute SHAP value across classes for each feature
-            shap_abs = np.abs(shap_values).mean(axis=2)  # shape: (n_samples, n_features)
-            shap_df = pd.DataFrame(shap_abs, columns=X_df.columns)
-            shap_importance = shap_df.mean().sort_values(ascending=False)
-        elif isinstance(shap_values, list) and isinstance(shap_values[0], np.ndarray):
-            # shape: (n_classes, n_samples, n_features)
-            shap_array = np.abs(np.array(shap_values))  # (n_classes, n_samples, n_features)
-            shap_abs = shap_array.mean(axis=0)  # mean over classes -> (n_samples, n_features)
-            shap_df = pd.DataFrame(shap_abs, columns=X_df.columns)
-            shap_importance = shap_df.mean().sort_values(ascending=False)
-        else:
-            shap_df = pd.DataFrame(shap_values, columns=X_df.columns)
-            shap_importance = shap_df.abs().mean().sort_values(ascending=False)
+        # Handle binary or multiclass
+        # Handle binary or multiclass
+        shap_abs = np.abs(shap_values)
 
-        # Print top important features
-        
+        if shap_abs.ndim == 3:
+            # Multiclass: (samples, features, classes) → average over classes
+            shap_mean = shap_abs.mean(axis=2)
+            shap_df = pd.DataFrame(shap_mean, columns=X_df.columns)
+        else:
+            shap_df = pd.DataFrame(shap_abs, columns=X_df.columns)
+
+        shap_importance = shap_df.mean().sort_values(ascending=False)
+
+
+        # Log top features
         print("Top Important Features:")
         print(shap_importance.head(10))
 
-        # Optionally save to JSON
-        import os
-        os.makedirs(self.config.feature_importance_file.parent, exist_ok=True)
-        shap_importance.to_json(self.config.feature_importance_file)
+        # Create folder for plots
+        plots_dir = self.config.feature_importance_file.parent / "plots"
+        os.makedirs(plots_dir, exist_ok=True)
 
-        logger.info(f"Feature importance saved to {self.config.feature_importance_file}")
+        # 1. Bar Plot
+        plt.figure(figsize=(10, 6))
+        shap_importance.head(20).plot(kind='barh')
+        plt.title("Top 20 Feature Importances (Mean SHAP Value)")
+        plt.gca().invert_yaxis()
+        plt.tight_layout()
+        bar_plot_path = plots_dir / "shap_bar_plot.png"
+        plt.savefig(bar_plot_path)
+        plt.close()
+
+        # 2. Beeswarm Plot
+        plt.figure(figsize=(12, 6))
+        shap.summary_plot(shap_values, X_df, plot_type="dot", show=False)
+        beeswarm_path = plots_dir / "shap_beeswarm_plot.png"
+        plt.savefig(beeswarm_path, bbox_inches='tight')
+        plt.close()
+
+        # (Optional) 3. Force Plot for a single prediction
+        # Uncomment to save interactive HTML
+        # force_plot = shap.plots.force(explainer.expected_value, shap_values[0], X_df.iloc[0])
+        # shap.save_html(str(plots_dir / "shap_force_plot.html"), force_plot)
+
+        # Save SHAP importance to JSON
+        shap_importance.to_json(self.config.feature_importance_file)
+        logger.info(f"SHAP values saved to {self.config.feature_importance_file}")
+        logger.info(f"SHAP bar plot saved to {bar_plot_path}")
+        logger.info(f"SHAP beeswarm plot saved to {beeswarm_path}")
+
         return shap_importance
+
+
 
 

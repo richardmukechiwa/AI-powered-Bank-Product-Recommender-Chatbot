@@ -5,6 +5,7 @@ from BankProducts.pipeline.stage_03_data_transformation import DataTransformatio
 from BankProducts.pipeline.stage_04_model_training import ModelTrainingPipeline
 from BankProducts.pipeline.stage_05_model_evaluation import ModelEvaluationTrainingPipeline
 from BankProducts.pipeline.stage_06_important_features import FeatureImportanceTrainingPipeline
+from BankProducts.pipeline.stage_07_final_model import FinalModelTrainingPipeline
 from BankProducts import logger
 
 
@@ -60,6 +61,14 @@ try:
     logger.info(" Important Features Analysis completed")
 except Exception as e:
     logger.error(f"Error in Important Features Analysis: {str(e)}")
+    raise e
+
+STAGE_NAME = "Final Model"
+try:
+    pipeline = FinalModelTrainingPipeline()
+    pipeline.main()
+    logger.info(f"Final Model Training Stage completed successfully")
+except Exception as e:
     raise e
         
             

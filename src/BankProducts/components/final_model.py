@@ -21,6 +21,7 @@ import tempfile
 from BankProducts.utils.common import save_json
 import os 
 from BankProducts.entity.config_entity import FinalModelConfig
+from pathlib import Path
 
 
 class FinalModel:

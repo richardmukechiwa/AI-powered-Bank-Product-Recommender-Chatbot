@@ -4,6 +4,7 @@ from sklearn.metrics import (accuracy_score,
                              confusion_matrix,
                              classification_report,
                              ConfusionMatrixDisplay)
+from pathlib import Path
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt

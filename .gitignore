@@ -180,7 +180,7 @@ cython_debug/
 *.yaml
 *.yml
 *.ini
-*.toml
+!*.toml
 *.conf
 *.cfg
 *.env

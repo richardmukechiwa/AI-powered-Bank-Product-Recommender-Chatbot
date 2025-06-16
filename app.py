@@ -3,95 +3,86 @@ import pandas as pd
 import joblib
 from pathlib import Path
 
-# Load trained model
-model = joblib.load(Path("artifacts/model_training/grid_search_model.joblib"))
+# === Load trained model and label encoder ===
+model_path = Path("artifacts/retrained_model/fin_model.joblib")
+model = joblib.load(model_path)
+labelencoder = joblib.load(Path("artifacts/retrained_model/labelencorder.joblib"))
 
 st.title("🤖 Banking Product Recommender Chatbot")
+st.markdown("Ask me what kind of banking product suits your situation, and I’ll suggest one for you!")
 
-# Create a chat container
+# === Setup chat history ===
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Function to extract structured features from a message (rule-based parser)
-def parse_user_input(message):
-    # Default values
-    data = {
-        "TransactionType": "Deposit",
-        "ProductCategory": "Loan",
-        "ProductSubcategory": "Standard",
-        "BranchCity": "Seville",
-        "Channel": "ATM",
-        "Amount": 1000.0,
-        "CreditCardFees": 0.0,
-        "InsuranceFees": 0.0,
-        "LatePaymentAmount": 0.0,
-        "CustomerScore": 600,
-        "MonthlyIncome": 2000.0,
-        "Month": 5,
-        "Year": 2025
-    }
-
-    # Parse keywords from message
+# === Function to parse user input ===
+def parse_user_input(message: str) -> pd.DataFrame:
     msg = message.lower()
 
-    # Transaction types
-    if "withdraw" in msg:
-        data["TransactionType"] = "Withdrawal"
-    elif "transfer" in msg:
-        data["TransactionType"] = "Transfer"
-    elif "card" in msg:
-        data["TransactionType"] = "Card Payment"
+    # Default feature values
+    data = {
+        "monthlyincome": 2500.0,
+        "productcategory": "Loan",
+        "most_used_channel": "ATM",
+        "productsubcategory": "Standard",
+        "amount": 1000.0,
+    }
 
-    # Product category
-    for cat in ["loan", "mortgage", "checking", "credit"]:
+    # Extract features based on keywords
+    for cat in ["loan", "mortgage", "credit", "savings", "checking"]:
         if cat in msg:
-            if cat == "credit":
-                data["ProductCategory"] = "Credit Card"
-            elif cat == "checking":
-                data["ProductCategory"] = "Checking Account"
-            else:
-                data["ProductCategory"] = cat.capitalize()
+            data["productcategory"] = "Credit Card" if cat == "credit" else cat.capitalize()
 
-    # Product subcategory
-    for sub in ["gold", "standard", "platinum"]:
+    for sub in ["gold", "platinum", "standard"]:
         if sub in msg:
-            data["ProductSubcategory"] = sub.capitalize()
+            data["productsubcategory"] = sub.capitalize()
 
-    # City
-    for city in ["malaga", "murcia", "seville"]:
-        if city in msg:
-            data["BranchCity"] = city.capitalize()
-
-    # Channel
-    for ch in ["atm", "branch"]:
+    for ch in ["atm", "branch", "mobile", "online"]:
         if ch in msg:
-            data["Channel"] = ch.capitalize()
+            data["most_used_channel"] = ch.capitalize()
 
-    # Optional: extract amounts or income from numbers in message (advanced)
+    # Extract numeric values for income or amount
+    for word in msg.split():
+        if word.replace('.', '', 1).isdigit():
+            val = float(word)
+            if "income" in msg or "salary" in msg:
+                data["monthlyincome"] = val
+            else:
+                data["amount"] = val
 
     return pd.DataFrame([data])
 
-# Display message history
+# === Display chat history ===
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Input box
-user_input = st.chat_input("Hi! What banking product are you looking for?")
+# === Get user input ===
+user_input = st.chat_input("Tell me about your needs...", key="chat_input")
 
 if user_input:
-    # Save user message
+    # Save and show user input
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
 
-    # Parse input and get prediction
-    input_df = parse_user_input(user_input)
-    recommendation = model.predict(input_df)[0]
+    try:
+        # Parse message to features
+        input_df = parse_user_input(user_input)
 
-    bot_response = f"Based on what you've told me, I recommend: **{recommendation}** 💡"
-    
-    # Save and display bot message
-    st.session_state.messages.append({"role": "assistant", "content": bot_response})
+        # Make prediction
+        encoded_prediction = model.predict(input_df)[0]
+
+        # Decode prediction to original label
+        decoded_prediction = labelencoder.inverse_transform([encoded_prediction])[0]
+
+        response = f"Based on your needs, I recommend: **{decoded_prediction}** 💡"
+
+    except Exception as e:
+        response = "⚠️ Sorry, I couldn't understand that. Please provide more details about your income, product type, or channel used."
+        st.error(str(e))  # Debugging output
+
+    # Show assistant response
+    st.session_state.messages.append({"role": "assistant", "content": response})
     with st.chat_message("assistant"):
-        st.markdown(bot_response)
+        st.markdown(response)
